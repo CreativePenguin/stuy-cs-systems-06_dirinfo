@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 DIR * my_opendir(char *path) {
   DIR *val = opendir(path);
@@ -25,8 +26,14 @@ struct dirent * my_readdir(DIR *dir) {
 // int my_sscanf(idk what to put for inputs);
 
 int main(int argc, char *argv[]) {
-  DIR *inputdir = my_opendir(argv[2]);
   char *inputpath = argv[2];
+  if(!inputpath) {
+    printf("Add arguments with ARGV= parameter\n");
+    printf("\n");
+    printf("Enter folder to search:\n");
+    fgets(inputpath, 255, stdin);
+  }
+  DIR *inputdir = my_opendir(inputpath);
   // printf("argv[2] = %s\n", argv[2]);
   // struct dirent *dir = readdir(inputdir);
   struct dirent *dir;
@@ -35,18 +42,14 @@ int main(int argc, char *argv[]) {
   // printf("stats: %u\n", stats->st_mode);
 
   while(1) {
-    char curfilepath[100];
+    char curfilepath[255];
     dir = my_readdir(inputdir);
     if(!dir) break;
-    int curfilepatherr = sscanf(curfilepath, "%s/%s", inputpath, dir->d_name);
-    if(!curfilepatherr) {
-      printf("curfilepatherr %d\n", curfilepatherr);
-      printf("error %d: %s\n", errno, strerror(errno));
-    }
+    sprintf(curfilepath, "%s/%s", inputpath, dir->d_name);
+    stat(inputpath, stats);
 
     printf("\tfilename: %s\tpath: %s\n", dir->d_name, curfilepath);
-    stat(dir->d_name, stats);
-    printf("stats: %u\n", stats->st_mode);
+    printf("size: %ld\n", stats->st_size);
   }
 
   // stat(strcat(argv[2], dir->d_name), stats);
