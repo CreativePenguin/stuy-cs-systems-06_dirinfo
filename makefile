@@ -21,7 +21,7 @@ main.o: main.c
 	$(CC) -c main.c
 
 clean:
-	rm *.o prog.out
+	rm *.o *.out
 
 memtest:
 	valgrind --leak-check=yes ./prog.out
