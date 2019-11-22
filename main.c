@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
   // printf("dir %s\n", (dir + stats->st_size)->d_name);
   printf("\n");
 
+  closedir(inputpath);
   free(dir);
   free(stats);
   return 0;
